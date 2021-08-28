@@ -38,7 +38,7 @@ class AuthService{
           }
       }
     }
-    //return null;
+    return null;
   }
 
   static Future<User?> signUpUser(BuildContext context, String name, String email, String password) async {
