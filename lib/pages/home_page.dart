@@ -19,9 +19,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(
         child: MaterialButton(
-          onPressed: (){
-            //AuthService.signUpUser(context, name, email, password)
-          },
+          onPressed: (){},
           color: Colors.deepOrange,
           child: Text("Logout", style: TextStyle(color: Colors.white),),
         ),
