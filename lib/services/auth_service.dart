@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:herewego/pages/signin_page.dart';
 import 'package:herewego/services/prefs_service.dart';
@@ -14,29 +13,10 @@ class AuthService{
       User? user =  _auth.currentUser!;
       print(user.toString());
       return user;
-    }  on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case 'invalid-email':
-          {
-            Utils.fireToast('Email is not valid');
-          } break;
-        case 'user-disabled':
-          {
-          Utils.fireToast('Account is not active');
-          } break;
-        case 'user-not-found':
-          {
-          Utils.fireToast( 'No user found');
-          } break;
-        case 'wrong-password':
-          {
-          Utils.fireToast( 'wrong password');
-          } break;
-        default:
-          {
-          Utils.fireToast( 'Unexpected error!');
-          }
-      }
+    }  catch (e) {
+
+      Utils.fireToast(e.toString());
+
     }
     return null;
   }
