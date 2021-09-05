@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:herewego/pages/home_page.dart';
 import 'package:herewego/pages/signin_page.dart';
 import 'package:herewego/pages/signup_page.dart';
-import 'package:herewego/services/detail_page.dart';
+import 'package:herewego/pages/detail_page.dart';
 import 'package:herewego/services/prefs_service.dart';
 
 void main() async {

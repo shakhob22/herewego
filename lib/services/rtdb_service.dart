@@ -20,4 +20,10 @@ class RTDBService {
     }
     return items;
   }
+
+  static Future<Stream<Event>> delPost(Post post) async {
+    _database.child("posts/").push().set(post.toJson());
+    return _database.onChildRemoved;
+  }
+
 }

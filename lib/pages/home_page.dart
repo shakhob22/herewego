@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:herewego/model/post_model.dart';
 import 'package:herewego/services/auth_service.dart';
-import 'package:herewego/services/detail_page.dart';
+import 'package:herewego/pages/detail_page.dart';
 import 'package:herewego/services/prefs_service.dart';
 import 'package:herewego/services/rtdb_service.dart';
 
@@ -14,13 +15,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  List items = [];
+  bool isLoading = false;
+  List<Post> items = [];
   
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    isLoading = true;
     _apiGetPosts();
   }
 
@@ -38,15 +39,18 @@ class _HomePageState extends State<HomePage> {
 
   _apiGetPosts() async{
     var id = await Prefs.loadUserId();
-    RTDBService.getPosts(id!).then((posts) => {
-      _respPosts(posts),
-    });
+      RTDBService.getPosts(id!).then((posts) =>
+      {
+        _respPosts(posts),
+      });
+    }
   }
 
 
   _respPosts(List<Post> posts) async {
     setState(() {
       items = posts;
+      isLoading = false;
     });
   }
   
@@ -59,6 +63,15 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: (){
+              setState(() {
+                isLoading = true;
+                _apiGetPosts();
+              });
+            },
+            icon: Icon(Icons.refresh),
+          ),
+          IconButton(
+            onPressed: (){
               AuthService.signOutUser(context);
             },
             icon: Icon(Icons.exit_to_app),
@@ -66,11 +79,18 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (ctx, i) {
-          return itemOfList(items[i]);
-        },
+      body: Stack(
+        children: [
+          ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (ctx, i) {
+              return itemOfList(items[i]);
+            },
+          ),
+          isLoading == true ?
+          Center(child: CircularProgressIndicator()) :
+          SizedBox.shrink()
+        ],
       ),
       
       floatingActionButton: FloatingActionButton(
@@ -85,14 +105,31 @@ class _HomePageState extends State<HomePage> {
 
   Widget itemOfList(Post post) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+            height: 250,
+            width: double.infinity,
+            child: post.img_url != null ?
+            Image.network(post.img_url!,fit: BoxFit.cover,):
+            Image.asset("assets/images/ic_default.png", fit: BoxFit.cover,),
+          ),
+          SizedBox(height: 10),
           Row(
             children: [
               Text(post.firstname!+" ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-              Text(post.lastname!, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)
+              Text(post.lastname!, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _menu()
+                    //Icon(Icons.more_vert)
+                  ],
+                )
+              )
             ],
           ),
           SizedBox(height: 5,),
@@ -103,5 +140,46 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
+  Widget _menu() {
+    return PopupMenuButton<int>(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
+      ),
+      itemBuilder: (context) => [
+        PopupMenuItem<int>(
+            value: 0,
+            child: Row(
+              children: [
+                Icon(Icons.add),
+                SizedBox(width: 5,),
+                Text("Add new post", style: TextStyle(color: Colors.green),)
+              ],
+            )
+        ),
+        PopupMenuItem<int>(
+            value: 1,
+            child: Row(
+              children: [
+                Icon(Icons.delete),
+                SizedBox(width: 5,),
+                Text("Delete current post", style: TextStyle(color: Colors.orange),)
+              ],
+            )
+        ),
+        PopupMenuDivider(),
+        PopupMenuItem<int>(
+            value: 2,
+            child: Row(
+              children: [
+                Icon(Icons.cleaning_services_rounded),
+                SizedBox(width: 5,),
+                Text("Delete all posts", style: TextStyle(color: Colors.red),)
+              ],
+            )
+        ),
+      ],
+      child: Icon(Icons.more_vert)
+    );
+  }
+  
 }
