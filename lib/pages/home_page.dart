@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
           return new DetailPage();
         }
     ));
-    if(results != null && results.containsKey("data")){
+    if(results.containsKey("data")){
       print(results['data']);
       _apiGetPosts();
     }
@@ -44,8 +44,6 @@ class _HomePageState extends State<HomePage> {
         _respPosts(posts),
       });
     }
-  }
-
 
   _respPosts(List<Post> posts) async {
     setState(() {
@@ -53,7 +51,7 @@ class _HomePageState extends State<HomePage> {
       isLoading = false;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +76,7 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      
+
       body: Stack(
         children: [
           ListView.builder(
@@ -92,7 +90,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox.shrink()
         ],
       ),
-      
+
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           //Navigator.pushNamed(context, DetailPage.id);
@@ -122,13 +120,13 @@ class _HomePageState extends State<HomePage> {
               Text(post.firstname!+" ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               Text(post.lastname!, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
               Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _menu()
-                    //Icon(Icons.more_vert)
-                  ],
-                )
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _menu()
+                      //Icon(Icons.more_vert)
+                    ],
+                  )
               )
             ],
           ),
@@ -142,44 +140,44 @@ class _HomePageState extends State<HomePage> {
   }
   Widget _menu() {
     return PopupMenuButton<int>(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15.0))
-      ),
-      itemBuilder: (context) => [
-        PopupMenuItem<int>(
-            value: 0,
-            child: Row(
-              children: [
-                Icon(Icons.add),
-                SizedBox(width: 5,),
-                Text("Add new post", style: TextStyle(color: Colors.green),)
-              ],
-            )
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0))
         ),
-        PopupMenuItem<int>(
-            value: 1,
-            child: Row(
-              children: [
-                Icon(Icons.delete),
-                SizedBox(width: 5,),
-                Text("Delete current post", style: TextStyle(color: Colors.orange),)
-              ],
-            )
-        ),
-        PopupMenuDivider(),
-        PopupMenuItem<int>(
-            value: 2,
-            child: Row(
-              children: [
-                Icon(Icons.cleaning_services_rounded),
-                SizedBox(width: 5,),
-                Text("Delete all posts", style: TextStyle(color: Colors.red),)
-              ],
-            )
-        ),
-      ],
-      child: Icon(Icons.more_vert)
+        itemBuilder: (context) => [
+          PopupMenuItem<int>(
+              value: 0,
+              child: Row(
+                children: [
+                  Icon(Icons.add),
+                  SizedBox(width: 5,),
+                  Text("Add new post", style: TextStyle(color: Colors.green),)
+                ],
+              )
+          ),
+          PopupMenuItem<int>(
+              value: 1,
+              child: Row(
+                children: [
+                  Icon(Icons.delete),
+                  SizedBox(width: 5,),
+                  Text("Delete current post", style: TextStyle(color: Colors.orange),)
+                ],
+              )
+          ),
+          PopupMenuDivider(),
+          PopupMenuItem<int>(
+              value: 2,
+              child: Row(
+                children: [
+                  Icon(Icons.cleaning_services_rounded),
+                  SizedBox(width: 5,),
+                  Text("Delete all posts", style: TextStyle(color: Colors.red),)
+                ],
+              )
+          ),
+        ],
+        child: Icon(Icons.more_vert)
     );
   }
-  
+
 }
